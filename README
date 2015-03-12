@@ -6,6 +6,13 @@ xnelson needs X11 (libX11).
 
 $ make
 
+RUNNING:
+
+xnelson takes no arguments, and will probably dock you a few points for trying
+to argue with him.
+
+$ ./xnelson
+
 TODO:
 - Improve error checking.
 - Debug partially/fully blank output on some executions.
