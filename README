@@ -1,4 +1,12 @@
 xnelson is Nelson for X.
 
-TODO: Improve error checking.
+BUILDING:
+
+xnelson needs X11 (libX11).
+
+$ make
+
+TODO:
+- Improve error checking.
+- Debug partially/fully blank output on some executions.
 
