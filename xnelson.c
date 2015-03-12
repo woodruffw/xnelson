@@ -20,15 +20,30 @@ static Window xn_create_win(Display *disp, int width, int height, int x, int y)
 {
 	int screen;
 	Window win;
+	XSizeHints *win_size;
 
 	screen = DefaultScreen(disp);
 
 	if ((win = XCreateSimpleWindow(disp, RootWindow(disp, screen), x, y,
 		width, height, 0, BlackPixel(disp, screen), WhitePixel(disp, screen))))
 	{
-		XMapWindow(disp, win);
-		XFlush(disp);
-		return win;
+		if ((win_size = XAllocSizeHints()))
+		{
+
+			win_size->flags = PSize | PMinSize | PMaxSize;
+			win_size->min_width = win_size->width = win_size->max_width = nelson_width;
+			win_size->min_height = win_size->height = win_size->max_height = nelson_height;
+			XSetWMNormalHints(disp, win, win_size);
+			XFree(win_size);
+
+			XMapWindow(disp, win);
+			XFlush(disp);
+			return win;
+		}
+		else
+		{
+			FATAL_ERROR("Could not allocate memory for window sizing", -1);
+		}
 	}
 	else
 	{
@@ -85,6 +100,7 @@ int xnelson(void)
 		screen = DefaultScreen(disp);
 
 		win = xn_create_win(disp, nelson_width, nelson_height, 0, 0);
+
 		ctx = xn_create_gc(disp, win);
 
 		XSync(disp, False);
