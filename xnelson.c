@@ -32,9 +32,7 @@ static Window xn_create_win(Display *disp, int width, int height, int x, int y)
 	}
 	else
 	{
-		fprintf(stderr, "Fatal: Could not create a window at %d in %s.\n",
-			__LINE__, __FILE__);
-		exit(-1);
+		FATAL_ERROR("Could not create a window.", -1);
 	}
 }
 
@@ -62,9 +60,7 @@ static GC xn_create_gc(Display *disp, Window win)
 	}
 	else
 	{
-		fprintf(stderr, "Fatal: Could not create a GC at %d in %s.\n",
-			__LINE__, __FILE__);
-		exit(-2);
+		FATAL_ERROR("Could not create a graphics context.", -2);
 	}
 }
 
@@ -111,15 +107,12 @@ int xnelson(void)
 		}
 		else
 		{
-			fprintf(stderr, "Fatal: Could not open the bitmap at %d in %s.\n",
-				__LINE__, __FILE__);
-			exit(-4);
+			FATAL_ERROR("Could not open the nelson bitmap.", -3);
 		}
 	}
 	else
 	{
-		fprintf(stderr, "Fatal: Could not open an X display.\n");
-		exit(-3);
+		FATAL_ERROR("Could not open a connection to the X server.", -4);
 	}
 
 	while(1)
