@@ -12,7 +12,8 @@
 #include "nelson.xbm"
 
 /*	xn_create_win
-
+	create a new Window tied to the given display with width and height at
+	coordinates x, y.
 */
 static Window xn_create_win(Display *disp, int width, int height, int x, int y)
 {
@@ -37,7 +38,8 @@ static Window xn_create_win(Display *disp, int width, int height, int x, int y)
 }
 
 /*	xn_create_gc
-
+	create and return a new graphics context for the given display in the given
+	window.
 */
 static GC xn_create_gc(Display *disp, Window win)
 {
@@ -66,7 +68,7 @@ static GC xn_create_gc(Display *disp, Window win)
 }
 
 /*	xnelson
-
+	summon nelson.
 */
 int xnelson(void)
 {
@@ -93,12 +95,12 @@ int xnelson(void)
 		if ((bmp = XCreateBitmapFromData(disp, win, nelson_bits, nelson_width,
 			nelson_height)) != None)
 		{
-			for (i = 0; i < 6; i++)
+			for (i = 0; i < 10; i++)
 			{
-				for (j = 0; j < 6; j++)
+				for (j = 0; j < 10; j++)
 				{
 					XCopyPlane(disp, bmp, win, ctx, 0, 0, nelson_width,
-						nelson_height, j * nelson_width, i * nelson_height, 1);
+						nelson_height, 0, 0, 1);
 					XSync(disp, False);
 					nanosleep(&sleep_spec, NULL);
 				}
