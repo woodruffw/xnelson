@@ -1,5 +1,6 @@
 /*	xnelson.c
 
+	The graphical routines for xnelson.
 */
 
 #include <X11/Xlib.h>
