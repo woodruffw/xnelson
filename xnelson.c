@@ -5,8 +5,11 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <X11/Xatom.h>
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include "xnelson.h"
@@ -42,13 +45,73 @@ static Window xn_create_win(Display *disp, int width, int height, int x, int y)
 		}
 		else
 		{
-			FATAL_ERROR("Could not allocate memory for window sizing", -1);
+			FATAL_ERROR("Could not allocate memory for window sizing.", -1);
 		}
 	}
 	else
 	{
 		FATAL_ERROR("Could not create a window.", -1);
 	}
+}
+
+/*	xn_set_win_above
+	uses EWMH to make the xnelson window stay on top.
+*/
+static void xn_set_win_above(Display *disp, Window win)
+{
+	Atom wm_state, wm_state_above;
+	XEvent event;
+
+	if ((wm_state = XInternAtom(disp, "_NET_WM_STATE", False)) != None)
+	{
+		if ((wm_state_above = XInternAtom(disp, "_NET_WM_STATE_ABOVE", False))
+			!= None)
+		{
+			event.xclient.type = ClientMessage;
+			event.xclient.serial = 0;
+			event.xclient.send_event = True;
+			event.xclient.display = disp;
+			event.xclient.window = win;
+			event.xclient.message_type = wm_state;
+			event.xclient.format = 32;
+			event.xclient.data.l[0] = 1; /* _NET_WM_STATE_ADD */
+			event.xclient.data.l[1] = wm_state_above;
+			event.xclient.data.l[2] = 0;
+			event.xclient.data.l[3] = 0;
+			event.xclient.data.l[4] = 0;
+
+			if (!(XSendEvent(disp, DefaultRootWindow(disp), False,
+				SubstructureRedirectMask | SubstructureNotifyMask, &event)))
+			{
+				FATAL_ERROR("Could not send an X event for window level.", -1);
+			}
+		}
+		else
+		{
+			FATAL_ERROR("Could not access _NET_WM_STATE_ABOVE.", -1);
+		}
+	}
+	else
+	{
+		FATAL_ERROR("Could not access _NET_WM_STATE.", -1);
+	}
+}
+
+/*	xn_set_win_name
+	sets the window's name to "xnelson".
+*/
+static void xn_set_win_name(Display *disp, Window win)
+{
+	char *name = "xnelson";
+	XTextProperty name_prop;
+
+
+	name_prop.value = (unsigned char *) name;
+	name_prop.encoding = XA_STRING;
+	name_prop.format = 8;
+	name_prop.nitems = strlen(name);
+
+	XSetWMName(disp, win, &name_prop);
 }
 
 /*	xn_create_gc
@@ -75,7 +138,7 @@ static GC xn_create_gc(Display *disp, Window win)
 	}
 	else
 	{
-		FATAL_ERROR("Could not create a graphics context.", -2);
+		FATAL_ERROR("Could not create a graphics context.", -1);
 	}
 }
 
@@ -101,6 +164,9 @@ int xnelson(void)
 
 		win = xn_create_win(disp, nelson_width, nelson_height, 0, 0);
 
+		xn_set_win_name(disp, win);
+		xn_set_win_above(disp, win);
+
 		ctx = xn_create_gc(disp, win);
 
 		XSync(disp, False);
@@ -123,12 +189,12 @@ int xnelson(void)
 		}
 		else
 		{
-			FATAL_ERROR("Could not open the nelson bitmap.", -3);
+			FATAL_ERROR("Could not open the nelson bitmap.", -1);
 		}
 	}
 	else
 	{
-		FATAL_ERROR("Could not open a connection to the X server.", -4);
+		FATAL_ERROR("Could not open a connection to the X server.", -1);
 	}
 
 	while(1)
