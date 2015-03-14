@@ -88,12 +88,12 @@ static void xn_set_win_above(Display *disp, Window win)
 		}
 		else
 		{
-			FATAL_ERROR("Could not access _NET_WM_STATE_ABOVE.", -1);
+			FATAL_ERROR("Could not access _NET_WM_STATE_ABOVE (EWMH?).", -1);
 		}
 	}
 	else
 	{
-		FATAL_ERROR("Could not access _NET_WM_STATE.", -1);
+		FATAL_ERROR("Could not access _NET_WM_STATE (EWMH?).", -1);
 	}
 }
 
