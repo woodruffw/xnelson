@@ -32,7 +32,6 @@ static Window xn_create_win(Display *disp, int width, int height, int x, int y)
 	{
 		if ((win_size = XAllocSizeHints()))
 		{
-
 			win_size->flags = PSize | PMinSize | PMaxSize;
 			win_size->min_width = win_size->width = win_size->max_width = nelson_width;
 			win_size->min_height = win_size->height = win_size->max_height = nelson_height;
@@ -104,7 +103,6 @@ static void xn_set_win_name(Display *disp, Window win)
 {
 	char *name = "xnelson";
 	XTextProperty name_prop;
-
 
 	name_prop.value = (unsigned char *) name;
 	name_prop.encoding = XA_STRING;
@@ -197,7 +195,7 @@ int xnelson(void)
 		FATAL_ERROR("Could not open a connection to the X server.", -1);
 	}
 
-	while(1)
+	while (1)
 	{
 		XNextEvent(disp, &evt);
 	}
