@@ -145,7 +145,7 @@ static GC xn_create_gc(Display *disp, Window win)
 */
 int xnelson(void)
 {
-	int screen, i, j;
+	int i, j;
 	struct timespec sleep_spec;
 	Display *disp;
 	Window win;
@@ -158,8 +158,6 @@ int xnelson(void)
 
 	if ((disp = XOpenDisplay(NULL)))
 	{
-		screen = DefaultScreen(disp);
-
 		win = xn_create_win(disp, nelson_width, nelson_height, 0, 0);
 
 		xn_set_win_name(disp, win);
